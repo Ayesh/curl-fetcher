@@ -14,6 +14,7 @@ use function is_array;
 use function is_object;
 use function json_decode;
 use function sprintf;
+
 use const CURL_SSLVERSION_TLSv1_2;
 use const CURLINFO_RESPONSE_CODE;
 use const CURLINFO_SIZE_DOWNLOAD;
@@ -59,28 +60,28 @@ class CurlFetcher {
 
     public function get(string $url, array $headers = []): string {
         curl_setopt($this->curlHandle, CURLOPT_URL, $url);
-		curl_setopt($this->curlHandle, CURLOPT_HEADER, $headers);
+        curl_setopt($this->curlHandle, CURLOPT_HEADER, $headers);
 
         $content = curl_exec($this->curlHandle);
 
-		$this->total_download_size += curl_getinfo($this->curlHandle,   CURLINFO_SIZE_DOWNLOAD);
+        $this->total_download_size += curl_getinfo($this->curlHandle, CURLINFO_SIZE_DOWNLOAD);
 
-		$this->reportErrors($url, $content);
+        $this->reportErrors($url, $content);
         return $content;
     }
 
-	/**
-	 * @throws \JsonException
-	 */
-	public function getJson(string $url, array $headers = []): object|array {
-		$data = $this->get($url, $headers);
-		$data = json_decode($data, false, 16, JSON_THROW_ON_ERROR);
-		if (!is_array($data) || !is_object($data)) {
-			throw new RuntimeException('Returned content is not a JSON response containing array|object');
-		}
+    /**
+     * @throws \JsonException
+     */
+    public function getJson(string $url, array $headers = []): object|array {
+        $data = $this->get($url, $headers);
+        $data = json_decode($data, false, 16, JSON_THROW_ON_ERROR);
+        if (!is_array($data) || !is_object($data)) {
+            throw new RuntimeException('Returned content is not a JSON response containing array|object');
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
     private function reportErrors(string $url, string|false $content): void {
         if ($content === false) {
@@ -94,7 +95,7 @@ class CurlFetcher {
 
         $status_code = curl_getinfo($this->curlHandle, CURLINFO_RESPONSE_CODE);
         if ($status_code !== 200) {
-            throw new RuntimeException(sprintf('HTTP Error %d in %s', $status_code, $url));
+            throw new RuntimeException(sprintf("HTTP Error %d in %s\r\n%s", $status_code, $url, $content));
         }
     }
 }
