@@ -61,7 +61,7 @@ class CurlFetcher {
 
     public function get(string $url, array $headers = []): string {
         curl_setopt($this->curlHandle, CURLOPT_URL, $url);
-        curl_setopt($this->curlHandle, CURLOPT_HEADER, $headers);
+        curl_setopt($this->curlHandle, CURLOPT_HTTPHEADER, $headers);
 
         $content = curl_exec($this->curlHandle);
 
