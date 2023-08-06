@@ -52,6 +52,7 @@ class CurlFetcher {
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_TCP_KEEPALIVE, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'ayesh/curl-fetcher');
     }
 
     public function getTransferSize(): int {
