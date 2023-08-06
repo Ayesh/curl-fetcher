@@ -77,7 +77,7 @@ class CurlFetcher {
     public function getJson(string $url, array $headers = []): object|array {
         $data = $this->get($url, $headers);
         $data = json_decode($data, false, 16, JSON_THROW_ON_ERROR);
-        if (!is_array($data) || !is_object($data)) {
+        if (!is_array($data) && !is_object($data)) {
             throw new RuntimeException('Returned content is not a JSON response containing array|object');
         }
 
